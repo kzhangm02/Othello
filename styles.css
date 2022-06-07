@@ -1,0 +1,213 @@
+body {
+    margin:0;
+}
+
+.myheader {
+	background: rgb(54, 168, 20);
+	color: white;
+	font-size: 40px;
+	font-family: Courier New;
+	line-height: 135px;
+	position: relative;
+	margin-bottom: 30px;
+}
+
+ul {
+    text-align: right;
+	color: white;
+	font-size: 28px;
+	font-family: Courier New;
+    list-style: none;
+    margin-top: -99px;
+	line-height: 2.4;
+	padding-right: 60px;
+	position: relative;
+}
+
+ul li {
+    display: inline-block;
+    padding-left: 50px;
+	position: relative;
+}
+
+a {
+  color: rgb(255, 255, 255);
+  text-decoration: none;
+}
+
+a:hover {
+	text-decoration: underline;
+}
+
+.scoreboard {
+	border-radius: 5px;
+	width: 280px;
+	height: 150px;
+	background: rgb(128, 82, 41);
+	position: absolute;
+	margin-top: 130px;
+	margin-left: 95px;
+}
+
+.settings {
+	border-radius: 5px;
+	width: 320px;
+	height: 150px;
+	background: rgb(128, 82, 41);
+	position: absolute;
+	margin-top: 130px;
+	margin-left: 902px;
+}
+
+.ai-button {
+	font-size: 20px;
+	font-family: Courier New;
+	font-weight: bold;
+	margin-left: 18px;
+	margin-right: 18px;
+	transition-duration: 0.3s;
+}
+
+.ai-button:hover {
+	text-decoration: underline;
+}
+
+.game-button {
+	background: rgb(128, 82, 41);
+	width: 310px;
+	height: 48px;
+	font-size: 20px;
+	font-family: Courier New;
+	font-weight: bold;
+	margin-top: 5px;
+	transition-duration: 0.3s;
+}
+
+.game-button:hover {
+	background: whitesmoke;
+	/* text-decoration: underline; */
+}
+
+p {
+	text-align: left;
+	font-size: 28px;
+	font-family: Courier New;
+	position: relative;
+	margin-left: 75px;
+	font-weight: bold;
+}
+
+.board{
+	border-radius: 5px;
+	width: 413px;
+	height: 413px;
+	background: rgb(128, 82, 41);
+	position: relative;
+}
+
+.square {
+	border: 0px;
+	border-radius: 2px;
+	background-color: rgb(66, 141, 49);
+	height: 46px;
+	width: 46px;
+	cursor: pointer;
+	box-shadow: 0 0 4px rgb(55, 33, 17), inset -1px -1px 2px rgb(0, 31, 0), inset 1px 1px 2px rgb(95, 173, 78);
+	position: relative
+}
+
+.square:hover {
+	background-color: rgb(141, 183, 29);
+	box-shadow: inset -1px -1px 2px rgb(35, 33, 0), inset 1px 1px 2px rgb(200, 245, 58);
+}
+
+.border {
+	background-color: rgb(255, 255, 255);
+	height: 0px;
+	width: 0px;
+}
+
+.legal-move {
+	border: 0px;
+	border-radius: 2px;
+	background-color: rgb(59, 167, 131);
+	height: 46px;
+	width: 46px;
+	cursor: pointer;
+	box-shadow: 0 0 4px rgb(55, 33, 17), inset -1px -1px 2px rgb(0, 32, 28), inset 1px 1px 2px rgb(98, 229, 190);
+	position: relative
+}
+
+.legal-move:hover {
+	background-color: rgb(143, 217, 74);
+	box-shadow: inset -1px -1px 2px rgb(2, 26, 2), inset 1px 1px 2px rgb(180, 222, 137);
+}
+
+.black-disk {
+	content:'';
+  	width: 38px;
+  	height: 38px;
+  	border-radius: 19px;
+	background: linear-gradient(135deg, rgb(70, 70, 70) 0%, rgb(30, 30, 30) 100%);
+	box-shadow: inset 1px 1px 2px rgb(140, 140, 140), inset -2px -2px 3px rgb(20, 20, 20);
+	position: absolute;
+	top: 4px;
+	left: 4px;
+}
+
+.black-disk-icon {
+	content:'';
+  	width: 32px;
+  	height: 32px;
+  	border-radius: 16px;
+	background: linear-gradient(135deg, rgb(70, 70, 70) 0%, rgb(30, 30, 30) 100%);
+	box-shadow: inset 1px 1px 2px rgb(140, 140, 140), inset -2px -2px 3px rgb(20, 20, 20);
+	position: absolute;
+}
+
+.white-disk {
+	content:'';
+  	width: 38px;
+  	height: 38px;
+  	border-radius: 19px;
+	position: absolute;
+	background: linear-gradient(135deg, rgb(240, 240, 240) 0%, rgb(200, 200, 200) 100%);
+	box-shadow: inset 2px 2px 3px rgb(255, 255, 255), inset -1px -1px 3px rgb(120, 120, 120);
+	top: 4px;
+	left: 4px;
+}
+
+.white-disk-icon {
+	content:'';
+  	width: 32px;
+  	height: 32px;
+  	border-radius: 16px;
+	position: absolute;
+	background: linear-gradient(135deg, rgb(240, 240, 240) 0%, rgb(200, 200, 200) 100%);
+	box-shadow: inset 2px 2px 3px rgb(255, 255, 255), inset -1px -1px 3px rgb(120, 120, 120);
+}
+
+.blank-icon {
+	content:'';
+  	width: 0px;
+  	height: 0px;
+	position: absolute;
+	background: rgb(128, 82, 41);
+}
+
+.grid-container {
+ 	display: grid;
+	grid-template-columns: repeat(8, 46px);
+	gap: 5px;
+	padding: 5px;
+	position: relative;
+}
+
+.result {
+	font-size: 24px;
+	font-family: Courier New;
+	font-weight: bold;
+	position: absolute;
+	margin-top: 20px;
+	margin-left: 78px;
+}
