@@ -7,9 +7,8 @@ class Agent():
    def __init__(self):
       self.num_weights = 10
       self.weights = np.random.randn(self.num_weights, 1)
-      self.weights[3] = 0
-      self.trainable = [0, 1, 2, 4, 5, 6, 7, 8, 9]
-      self.weight_to_sq = {0: (0,0), 1: (1,1), 2: (2,2), 3: (3,3), 4: (0,1), 5: (1,2), 6: (2,3), 7: (0,2), 8: (1,3), 9: (0,3)}
+      self.trainable = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+      self.weight_to_sq = {0: (0,0), 1: (0,1), 2: (0,2), 3: (0,3), 4: (1,1), 5: (1,2), 6: (1,3), 7: (2,2), 8: (2,3), 9: (3,3)}
       self.weight_mask = [[np.array([0]) for i in range(8)] for j in range(8)]
       for k in range(self.num_weights):
          r = self.weight_to_sq[k][0]
@@ -29,19 +28,7 @@ class Agent():
       self.weight_mask[7-r][7-c] = self.weights[k]
       
    def eval(self, board):
-      return np.sum(np.multiply(board.state, np.array(self.weight_mask).squeeze()))
-   
-   # def find_best_move(self, board, moves):
-      # pairs = []
-      # for move in moves:
-         # self.temp_board.copy_board(board)
-         # self.temp_board.move(move)
-         # legal_moves = self.temp_board.find_moves()
-         # eval = self.eval(self.temp_board) + len(legal_moves)
-         # pairs.append((eval, move))
-      # if board.turn == 'x':
-         # return max(pairs)
-      # return min(pairs)
+      return np.round(np.sum(np.multiply(board.state, np.array(self.weight_mask).squeeze())), 2)
       
    def set_weights(self, weights):
       for k in range(self.num_weights):
@@ -66,30 +53,28 @@ class Board:
 
     def find_moves(self, find_flipped=True):
         moves = []
-        for i in range(1,9):
-            for j in range(1,9):
-                idx = 10*i + j
-                legal = False
-                flip = set({})
-                if self.board[idx] == '.':
-                    for d in self.dirs:
-                        sq = set({})
-                        new_idx = idx + d
-                        if self.board[new_idx] == self.turn or self.board[new_idx] == '.':
-                            continue
-                        while self.board[new_idx] == self.other_token[self.turn]:
-                            sq.add(new_idx)
-                            new_idx += d
-                        if self.board[new_idx] == self.turn:
-                            legal = True
-                            flip = flip.union(sq)
-                            if not find_flipped:
-                                break
-                if legal:
+        valid = [k for k in range(len(self.board)) if self.board[k] == '.']
+        for idx in valid:
+            legal = False
+            flip = []
+            valid_dirs = [d for d in self.dirs if not (self.board[idx + d] in [self.turn, '.'])]
+            for d in valid_dirs:
+                new_idx = idx + d
+                sq = []
+                while self.board[new_idx] == self.other_token[self.turn]:
+                    sq.append(new_idx)
+                    new_idx += d
+                if self.board[new_idx] == self.turn:
+                    legal = True
                     if find_flipped:
-                        moves.append((idx, flip))
+                        flip += sq
                     else:
-                        moves.append(idx)
+                        break
+            if legal:
+                if find_flipped:
+                   moves.append((idx, set(flip)))
+                else:
+                   moves.append(idx)
         return moves
 
     def move(self, idx):
@@ -152,36 +137,34 @@ class Strategy():
         self.other_token = {'x':'o', 'o':'x'}
         self.agent = agent
         self.cutoff_depth = cutoff_depth
-        self.temp_board = Board()
+        self.temp_boards = [Board() for k in range(cutoff_depth)]
    
     def find_best_move(self, board, alpha=float('-inf'), beta=float('inf'), depth=0):
         if depth == self.cutoff_depth:
-            if self.turn == 'x':
-                return (self.agent.eval(board), None)
-            return (-1 * self.agent.eval(board), None)
+            return (self.agent.eval(board), None)
         moves = board.find_moves()
         if len(moves) == 0:
-            self.temp_board.copy_board(board)
-            self.temp_board.pass_turn()
-            moves = self.temp_board.find_moves()
+            self.temp_boards[depth].copy_board(board)
+            self.temp_boards[depth].pass_turn()
+            moves = self.temp_boards[depth].find_moves()
             if len(moves) == 0:
-                my_count = board.board.count(self.turn)
-                op_count = board.board.count(board.other_token[self.turn])
-                if my_count > op_count:
+                x_count = np.count_nonzero(self.temp_boards[depth].board == 'x')
+                o_count = np.count_nonzero(self.temp_boards[depth].board == 'o')
+                if x_count > o_count:
                     return (float('inf'), None)
-                elif my_count < op_count:
+                elif x_count > o_count:
                     return (float('-inf'), None)
                 else:
                     return (0, None)
             else:
-                value = self.find_best_move(self.temp_board, alpha, beta, depth+1)[0]
+                value = self.find_best_move(self.temp_boards[depth], alpha, beta, depth+1)[0]
                 return (value, None)
-        if board.turn == self.turn:
+        if board.turn == 'x':
             candidate = (float('-inf'), None)
             for move in moves:
-                self.temp_board.copy_board(board)
-                self.temp_board.move(move)
-                value = self.find_best_move(self.temp_board, alpha, beta, depth+1)[0]
+                self.temp_boards[depth].copy_board(board)
+                self.temp_boards[depth].move(move)
+                value = self.find_best_move(self.temp_boards[depth], alpha, beta, depth+1)[0]
                 if candidate[1] == None or value > candidate[0]:
                     candidate = (value, move)
                 if candidate[0] >= beta:
@@ -190,9 +173,9 @@ class Strategy():
         else:
             candidate = (float('inf'), None)
             for move in moves:
-                self.temp_board.copy_board(board)
-                self.temp_board.move(move)
-                value = self.find_best_move(self.temp_board, alpha, beta, depth+1)[0]
+                self.temp_boards[depth].copy_board(board)
+                self.temp_boards[depth].move(move)
+                value = self.find_best_move(self.temp_boards[depth], alpha, beta, depth+1)[0]
                 if candidate[1] == None or value < candidate[0]:
                     candidate = (value, move)
                 if candidate[0] <= alpha:
@@ -200,7 +183,7 @@ class Strategy():
                 beta = min(beta, candidate[0])
         return candidate
         
-def find_best_move_unique(*args):
+def find_best_move(*args):
     state = Element('state').element.innerHTML
     global_board.set_board(state)
     candidate = strategy.find_best_move(global_board)
@@ -213,9 +196,11 @@ def set_strategy(*args):
     if ai_turn == '-':
         strategy = None
     else:
-        strategy = Strategy(ai_turn, agent, 1)
+        strategy = Strategy(ai_turn, agent, 6)
         
-weights = [5.925923040996503, -1.2530656815684476, -0.7442317598865232, 0.0, -2.793126083525491, -2.439215370868367, 0.8114567742238017, 8.363316678824882, 0.0805112529383367, -1.8362651847690366]
+# The Standard WPC Heuristics AI is temporarily used
+# The custom AI requires further training
+weights = [1.0, -0.25, 0.1, 0.05, -0.25, 0.01, 0.01, 0.05, 0.02, 0.01]
 weights = np.array(weights)
 weights = np.expand_dims(weights, axis=1)
 agent = Agent()

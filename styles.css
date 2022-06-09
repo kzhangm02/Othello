@@ -9,7 +9,7 @@ body {
 	font-family: Courier New;
 	line-height: 135px;
 	position: relative;
-	margin-bottom: 30px;
+	margin-bottom: 28px;
 }
 
 ul {
@@ -45,7 +45,7 @@ a:hover {
 	height: 150px;
 	background: rgb(128, 82, 41);
 	position: absolute;
-	margin-top: 130px;
+	margin-top: 125px;
 	margin-left: 95px;
 }
 
@@ -55,7 +55,7 @@ a:hover {
 	height: 150px;
 	background: rgb(128, 82, 41);
 	position: absolute;
-	margin-top: 130px;
+	margin-top: 125px;
 	margin-left: 902px;
 }
 
@@ -74,18 +74,15 @@ a:hover {
 
 .game-button {
 	background: rgb(128, 82, 41);
-	width: 310px;
-	height: 48px;
 	font-size: 20px;
 	font-family: Courier New;
 	font-weight: bold;
-	margin-top: 5px;
+	margin-top: 12px;
 	transition-duration: 0.3s;
 }
 
 .game-button:hover {
-	background: whitesmoke;
-	/* text-decoration: underline; */
+	text-decoration: underline;
 }
 
 p {
@@ -97,10 +94,19 @@ p {
 	font-weight: bold;
 }
 
+.grid-container {
+ 	display: grid;
+	grid-template-columns: repeat(8, 50px);
+	gap: 5px;
+	padding: 5px;
+	position: relative;
+}
+
+
 .board{
 	border-radius: 5px;
-	width: 413px;
-	height: 413px;
+	width: 445px;
+	height: 445px;
 	background: rgb(128, 82, 41);
 	position: relative;
 }
@@ -109,16 +115,43 @@ p {
 	border: 0px;
 	border-radius: 2px;
 	background-color: rgb(66, 141, 49);
-	height: 46px;
-	width: 46px;
+	height: 50px;
+	width: 50px;
 	cursor: pointer;
 	box-shadow: 0 0 4px rgb(55, 33, 17), inset -1px -1px 2px rgb(0, 31, 0), inset 1px 1px 2px rgb(95, 173, 78);
-	position: relative
+	position: relative;
 }
 
 .square:hover {
 	background-color: rgb(141, 183, 29);
 	box-shadow: inset -1px -1px 2px rgb(35, 33, 0), inset 1px 1px 2px rgb(200, 245, 58);
+}
+
+.legal-move {
+	border: 0px;
+	border-radius: 2px;
+	background-color: rgb(59, 167, 131);
+	height: 50px;
+	width: 50px;
+	cursor: pointer;
+	box-shadow: 0 0 4px rgb(55, 33, 17), inset -1px -1px 2px rgb(0, 32, 28), inset 1px 1px 2px rgb(78, 209, 170);
+	position: relative
+}
+
+.legal-move:hover {
+	background-color: rgb(133, 207, 64);
+	box-shadow: inset -1px -1px 2px rgb(2, 26, 2), inset 1px 1px 2px rgb(190, 232, 147);
+}
+
+.last-move {
+	border: 0px;
+	border-radius: 2px;
+	background-color: rgb(179, 145, 21);
+	height: 50px;
+	width: 50px;
+	cursor: pointer;
+	box-shadow: 0 0 4px rgb(55, 33, 17), inset -1px -1px 2px rgb(35, 27, 0), inset 1px 1px 2px rgb(225, 193, 68);
+	position: relative
 }
 
 .border {
@@ -127,23 +160,7 @@ p {
 	width: 0px;
 }
 
-.legal-move {
-	border: 0px;
-	border-radius: 2px;
-	background-color: rgb(59, 167, 131);
-	height: 46px;
-	width: 46px;
-	cursor: pointer;
-	box-shadow: 0 0 4px rgb(55, 33, 17), inset -1px -1px 2px rgb(0, 32, 28), inset 1px 1px 2px rgb(98, 229, 190);
-	position: relative
-}
-
-.legal-move:hover {
-	background-color: rgb(143, 217, 74);
-	box-shadow: inset -1px -1px 2px rgb(2, 26, 2), inset 1px 1px 2px rgb(180, 222, 137);
-}
-
-.black-disk {
+.black-disk-old {
 	content:'';
   	width: 38px;
   	height: 38px;
@@ -153,6 +170,18 @@ p {
 	position: absolute;
 	top: 4px;
 	left: 4px;
+}
+
+.black-disk {
+	content:'';
+  	width: 40px;
+  	height: 40px;
+  	border-radius: 20px;
+	background: #404040;
+	box-shadow: inset -5px -5px 15px #1a1a1a, inset 5px 5px 15px #6a6a6a;
+	position: absolute;
+	top: 5px;
+	left: 5px;
 }
 
 .black-disk-icon {
@@ -160,21 +189,33 @@ p {
   	width: 32px;
   	height: 32px;
   	border-radius: 16px;
-	background: linear-gradient(135deg, rgb(70, 70, 70) 0%, rgb(30, 30, 30) 100%);
-	box-shadow: inset 1px 1px 2px rgb(140, 140, 140), inset -2px -2px 3px rgb(20, 20, 20);
+	background: #404040;
+	box-shadow: inset -4px -4px 12px #1a1a1a, inset 4px 4px 12px #6a6a6a;
 	position: absolute;
+}
+
+.white-disk-old {
+	content:'';
+  	width: 38px;
+  	height: 38px;
+  	border-radius: 19px;				
+	background: linear-gradient(135deg, rgb(240, 240, 240) 0%, rgb(200, 200, 200) 100%);
+	box-shadow: inset 2px 2px 3px rgb(255, 255, 255), inset -1px -1px 3px rgb(120, 120, 120);
+	position: absolute;
+	top: 4px;
+	left: 4px;
 }
 
 .white-disk {
 	content:'';
-  	width: 38px;
-  	height: 38px;
-  	border-radius: 19px;
+  	width: 40px;
+  	height: 40px;
+	border-radius: 20px;
+	background: #dedede;
+	box-shadow: inset -5px -5px 12px #828282, inset 5px 5px 12px #ffffff;
 	position: absolute;
-	background: linear-gradient(135deg, rgb(240, 240, 240) 0%, rgb(200, 200, 200) 100%);
-	box-shadow: inset 2px 2px 3px rgb(255, 255, 255), inset -1px -1px 3px rgb(120, 120, 120);
-	top: 4px;
-	left: 4px;
+	top: 5px;
+	left: 5px;
 }
 
 .white-disk-icon {
@@ -182,9 +223,9 @@ p {
   	width: 32px;
   	height: 32px;
   	border-radius: 16px;
+	background: #dedede;
+	box-shadow: inset -4px -4px 10px #828282, inset 4px 4px 10px #ffffff;
 	position: absolute;
-	background: linear-gradient(135deg, rgb(240, 240, 240) 0%, rgb(200, 200, 200) 100%);
-	box-shadow: inset 2px 2px 3px rgb(255, 255, 255), inset -1px -1px 3px rgb(120, 120, 120);
 }
 
 .blank-icon {
@@ -193,14 +234,6 @@ p {
   	height: 0px;
 	position: absolute;
 	background: rgb(128, 82, 41);
-}
-
-.grid-container {
- 	display: grid;
-	grid-template-columns: repeat(8, 46px);
-	gap: 5px;
-	padding: 5px;
-	position: relative;
 }
 
 .result {
