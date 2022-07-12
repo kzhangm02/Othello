@@ -196,11 +196,11 @@ def set_strategy(*args):
     if ai_turn == '-':
         strategy = None
     else:
-        strategy = Strategy(ai_turn, agent, 6)
+        strategy = Strategy(ai_turn, agent, 4)
         
-# The Standard WPC Heuristics AI is temporarily used
-# The custom AI requires further training
-weights = [1.0, -0.25, 0.1, 0.05, -0.25, 0.01, 0.01, 0.05, 0.02, 0.01]
+# Custom AI trained with co-evolutionary genetic algorithm, achieve 60% win rate against SWPC AI
+# Planning to use n-tuple networks for better performance
+weights = [0.77, -0.08, 0.68, -0.12, -0.51, -0.124, 0.055, 0.06, 0.0, 0.0]
 weights = np.array(weights)
 weights = np.expand_dims(weights, axis=1)
 agent = Agent()
